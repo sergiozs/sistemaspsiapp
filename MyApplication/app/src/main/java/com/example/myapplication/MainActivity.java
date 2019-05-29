@@ -19,11 +19,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -39,6 +37,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -60,11 +59,8 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.mainLayout).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                /*InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);*/
                 ((EditText) findViewById(R.id.t_name)).onEditorAction(EditorInfo.IME_ACTION_DONE);
                 ((EditText) findViewById(R.id.t_floor)).onEditorAction(EditorInfo.IME_ACTION_DONE);
-                ((EditText) findViewById(R.id.t_type)).onEditorAction(EditorInfo.IME_ACTION_DONE);
                 return true;
             }
         });
@@ -76,9 +72,11 @@ public class MainActivity extends AppCompatActivity {
 
         buttonTipo.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                ((EditText) findViewById(R.id.t_name)).onEditorAction(EditorInfo.IME_ACTION_DONE);
+                ((EditText) findViewById(R.id.t_floor)).onEditorAction(EditorInfo.IME_ACTION_DONE);
+                ((TextView)findViewById(R.id.t_aux)).setText("Soporte");
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("Tipo de ticket");
-
                 String[] tipos = {"Soporte", "SIAF", "Impresora", "Redes", "SAPS", "Web"};
                 int checkedItem = 0;
                 builder.setSingleChoiceItems(tipos, checkedItem, new DialogInterface.OnClickListener() {
@@ -93,33 +91,28 @@ public class MainActivity extends AppCompatActivity {
                             case 4: taux = "SAPS";break;
                             case 5: taux = "Web";break;
                         }
-                        ((Button)findViewById(R.id.btn_tipo)).setText(taux);
-                        //((Button)findViewById(R.id.btn_tipo)).setBackgroundColor(Color.parseColor("#ffffff"));
-                        //((Button)findViewById(R.id.btn_tipo)).setTextColor(Color.parseColor("#000000"));
+                        ((TextView)findViewById(R.id.t_aux)).setText(taux);
                     }
                 });
 
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(((Button)findViewById(R.id.btn_tipo)).getText().toString() == "Tipo"){
-                            ((Button)findViewById(R.id.btn_tipo)).setText("Soporte");
-                        }
+                        ((Button)findViewById(R.id.btn_tipo)).setText(((TextView)findViewById(R.id.t_aux)).getText());
                         ((Button)findViewById(R.id.btn_tipo)).setBackgroundColor(Color.parseColor("#ffffff"));
                         ((Button)findViewById(R.id.btn_tipo)).setTextColor(Color.parseColor("#000000"));
+                        ((TextView)findViewById(R.id.t_aux)).setText("");
                     }
                 });
 
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(((Button)findViewById(R.id.btn_tipo)).getCurrentTextColor() != Color.parseColor("#000000")){
-                            ((Button)findViewById(R.id.btn_tipo)).setText("Tipo");
-                        }
+                        ((TextView)findViewById(R.id.t_aux)).setText("");
                     }
                 });
                 AlertDialog dialog = builder.create();
-                dialog.setCanceledOnTouchOutside(false);
+                dialog.setCanceledOnTouchOutside(true);
                 dialog.show();
             }
         });
@@ -132,13 +125,21 @@ public class MainActivity extends AppCompatActivity {
                 ticket.put("user", tname.getText().toString().trim());
                 EditText tfloor = (EditText) findViewById(R.id.t_floor);
                 ticket.put("floor", tfloor.getText().toString());
-                EditText ttype = (EditText) findViewById(R.id.t_type);
-                //ticket.put("type", ttype.getText().toString());
                 Button btype = ((Button)findViewById(R.id.btn_tipo));
                 ticket.put("type", btype.getText().toString());
+                ticket.put("time", new Date());
                 ticket.put("activo", true);
 
-                if(!isEmpty(tname) && !isEmpty(tfloor) && btype.getText().toString() != "Tipo") {
+                if(isEmpty(tname)){
+                    Toast.makeText(getApplicationContext(), "Nombre de usuario vacío!", Toast.LENGTH_LONG).show();
+                    tname.setText("");
+                }else if(isEmpty(tfloor)){
+                    Toast.makeText(getApplicationContext(), "Indicar número de piso!", Toast.LENGTH_LONG).show();
+                }else if(Integer.parseInt(tfloor.getText().toString()) <= 0 || Integer.parseInt(tfloor.getText().toString()) >10){
+                    Toast.makeText(getApplicationContext(), "Ese piso no existe!", Toast.LENGTH_LONG).show();
+                }else if(btype.getText().toString().equals("Tipo")){
+                    Toast.makeText(getApplicationContext(), "Indicar tipo de ticket!", Toast.LENGTH_LONG).show();
+                }else if(!isEmpty(tname) && !isEmpty(tfloor) && btype.getText().toString() != "Tipo") {
 
                     db.collection("ticket").document("tk." + datecode)
                             .set(ticket)
@@ -157,24 +158,11 @@ public class MainActivity extends AppCompatActivity {
                             });
                     tname.setText("");
                     tfloor.setText("");
-                    ttype.setText("");
                     btype.setText("Tipo");
                     btype.setBackgroundColor(Color.parseColor("#F1F1F1"));
                     btype.setTextColor(Color.parseColor("#949494"));
                     tname.onEditorAction(EditorInfo.IME_ACTION_DONE);
                     tfloor.onEditorAction(EditorInfo.IME_ACTION_DONE);
-                    ttype.onEditorAction(EditorInfo.IME_ACTION_DONE);
-                }else if(isEmpty(tname)){
-                    Toast.makeText(getApplicationContext(), "Nombre de usuario vacío!", Toast.LENGTH_LONG).show();
-                    tname.setText("");
-                }else if(isEmpty(tfloor)){
-                    Toast.makeText(getApplicationContext(), "Indicar número de piso!", Toast.LENGTH_LONG).show();
-                }
-                /*else if(isEmpty(ttype)){
-                    Toast.makeText(getApplicationContext(), "Indicar tipo de ticket!", Toast.LENGTH_LONG).show();
-                }*/
-                else if(btype.getText().toString() == "Tipo"){
-                    Toast.makeText(getApplicationContext(), "Indicar tipo de ticket!", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -204,7 +192,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
-                //Toast.makeText(getApplicationContext(), "Button GET USERS", Toast.LENGTH_LONG).show();
             }
 
         });
@@ -218,9 +205,38 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 if (task.isSuccessful()) {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                    builder.setTitle("Pendientes");
+                                    List<String> lpid = new ArrayList<>();
+                                    //Map<String,Object> pend = new HashMap<>();
                                     for (QueryDocumentSnapshot document : task.getResult()) {
-                                        Log.d(TAG, document.getId() + " => " + document.getData());
+                                        //Log.d(TAG, document.getId() + " => " + document.getData());
+                                        //lpid.add(document.getId() + " => " + document.getData());
+                                        String piso = document.getData().get("floor").toString();
+                                        String tipo = document.getData().get("type").toString();
+                                        String usuario = document.getData().get("user").toString();
+                                        lpid.add("PISO "+piso+": "+tipo+" | "+usuario);
                                     }
+                                    Collections.sort(lpid);
+                                    String[] pid = lpid.toArray(new String[0]);
+                                    builder.setItems(pid, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            /*switch (which) {
+                                                case 0: break;
+                                                default: break;
+                                            }*/
+                                        }
+                                    });
+
+                                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                        }
+                                    });
+                                    AlertDialog dialog = builder.create();
+                                    dialog.setCanceledOnTouchOutside(true);
+                                    dialog.show();
                                 } else {
                                     Log.d(TAG, "Error getting documents: ", task.getException());
                                 }

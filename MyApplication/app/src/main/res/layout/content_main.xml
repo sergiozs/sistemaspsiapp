@@ -16,11 +16,15 @@
         android:id="@+id/button_send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="NEW TICKET"
+        android:layout_marginTop="120dp"
+        android:background="#C9E3FF"
+        android:capitalize="none"
+        android:text="  Crear Ticket  "
+        android:textAllCaps="false"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/t_type" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_tipo" />
 
     <Button
         android:id="@+id/button_get"
@@ -30,6 +34,7 @@
         android:layout_marginLeft="21dp"
         android:layout_marginBottom="21dp"
         android:text="PENDING"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/button_ticket"
         app:layout_constraintStart_toStartOf="@+id/button_ticket" />
 
@@ -37,7 +42,7 @@
         android:id="@+id/button_ticket"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="112dp"
+        android:layout_marginBottom="100dp"
         android:text="ACTIVE TICKETS"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -59,28 +64,15 @@
 
     <EditText
         android:id="@+id/t_floor"
-        android:layout_width="213dp"
-        android:layout_height="48dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:ems="10"
         android:hint="Piso"
         android:inputType="number"
+        android:maxLength="2"
         app:layout_constraintStart_toStartOf="@+id/t_name"
         app:layout_constraintTop_toBottomOf="@+id/t_name" />
-
-    <EditText
-        android:id="@+id/t_type"
-        android:layout_width="106dp"
-        android:layout_height="47dp"
-        android:layout_marginStart="55dp"
-        android:layout_marginLeft="55dp"
-        android:layout_marginTop="66dp"
-        android:ems="10"
-        android:hint="Tipo"
-        android:inputType="number"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_tipo" />
 
     <Button
         android:id="@+id/btn_tipo"
@@ -96,5 +88,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/t_name" />
+
+    <TextView
+        android:id="@+id/t_aux"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginBottom="36dp"
+        android:clickable="false"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
