@@ -1,7 +1,9 @@
 package com.example.myapplication;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.TextView;
 
 public class TicketActivity extends AppCompatActivity {
 
@@ -11,4 +13,6 @@ public class TicketActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ticket);
 
     }
+
+
 }
