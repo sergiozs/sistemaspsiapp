@@ -10,7 +10,7 @@ public class Ticket {
     private boolean activo;
     private Timestamp fecha;
 
-    public Ticket(String ticketid, String usuario, String tipo, String piso, boolean activo, Timestamp fecha){
+    public Ticket(String ticketid, String usuario, String piso, String tipo, boolean activo, Timestamp fecha){
         this.ticketid = ticketid;
         this.usuario = usuario;
         this.tipo = tipo;

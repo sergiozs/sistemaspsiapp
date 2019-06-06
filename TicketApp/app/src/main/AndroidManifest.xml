@@ -10,6 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".CreateTicket"
+            android:excludeFromRecents="true"
+            android:theme="@android:style/Theme.Dialog">
+        </activity>
+        <activity
             android:name=".ScrollingActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
