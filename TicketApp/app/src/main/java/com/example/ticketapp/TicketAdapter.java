@@ -1,6 +1,8 @@
 package com.example.ticketapp;
 
 import android.app.Activity;
+import android.app.Application;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -8,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.ticketapp.Model.Ticket;
 
 import java.text.SimpleDateFormat;
@@ -15,6 +19,9 @@ import java.util.Date;
 import java.util.List;
 
 class TicketViewHolder extends RecyclerView.ViewHolder {
+    Context context;
+    public View view;
+    //public Ticket currentTicket;
     public TextView ticketid, usuario, tipo, piso, fecha, activo;
     public TicketViewHolder(View ticketView){
         super(ticketView);
@@ -24,6 +31,13 @@ class TicketViewHolder extends RecyclerView.ViewHolder {
         piso = ticketView.findViewById(R.id.txtPiso);
         fecha = ticketView.findViewById(R.id.txtFecha);
         activo = ticketView.findViewById(R.id.txtActivo);
+
+        view = ticketView;
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                Log.d("INSIDE CARD", "clicked yo!");
+            }
+        });
     }
 }
 

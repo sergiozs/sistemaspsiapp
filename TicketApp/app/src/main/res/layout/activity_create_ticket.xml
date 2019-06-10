@@ -1,29 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/create_ticket_LL">
 
-    <EditText
-        android:id="@+id/t_user"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name" />
+        android:orientation="vertical"
+        android:layout_margin="30dp">
 
-    <EditText
-        android:id="@+id/t_piso"
-        android:layout_width="match_parent"
+        <EditText
+            android:id="@+id/t_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Usuario"
+            android:inputType="textPersonName"/>
+
+        <EditText
+            android:id="@+id/t_piso"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Piso"
+            android:inputType="number"
+            android:maxLength="2"/>
+
+        <Spinner
+            android:id="@+id/spinTipo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_crear_ticket"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name" />
-
-    <Spinner
-        android:id="@+id/spinTipo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_gravity="center"
+        android:text="Crear Ticket"
+        android:hapticFeedbackEnabled="true"
+        android:background="@drawable/green_trading_button_effect"
+        style="?android:attr/borderlessButtonStyle"/>
 
 </LinearLayout>
