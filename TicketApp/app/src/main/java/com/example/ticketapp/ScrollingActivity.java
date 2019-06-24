@@ -3,9 +3,7 @@ package com.example.ticketapp;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,13 +13,13 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.example.ticketapp.Model.Ticket;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -35,9 +33,12 @@ public class ScrollingActivity extends AppCompatActivity {
     Context context;
     List<Ticket> tickets = new ArrayList<>();
     TicketAdapter adapter;
+    int FILTER_STATE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTitle("UIS PSI");
+
         context = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling);
@@ -58,9 +59,19 @@ public class ScrollingActivity extends AppCompatActivity {
     }
 
     public void updateTicketList(){
-        db.collection("ticket")
-                .whereEqualTo("activo", true)
-                .get()
+        tickets.clear();
+        RecyclerView recycler = findViewById(R.id.my_recycler_view);
+        recycler.setLayoutManager(new LinearLayoutManager(context));
+        adapter = new TicketAdapter(recycler, context, tickets);
+        recycler.setAdapter(adapter);
+
+        Query docRef = null;
+        switch(FILTER_STATE){
+            case 0: docRef = db.collection("ticket"); break;
+            case 1: docRef = db.collection("ticket").whereEqualTo("activo", true); break;
+            case 2: docRef = db.collection("ticket").whereEqualTo("activo", false); break;
+        }
+                docRef.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -68,16 +79,17 @@ public class ScrollingActivity extends AppCompatActivity {
                             Map<String,Object> aTicket;
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 aTicket = document.getData();
-                                Timestamp tFecha     = (Timestamp) aTicket.get("time");
                                 Ticket auxT = new Ticket(document.getId(),
                                         aTicket.get("user").toString(),
                                         "Piso "+aTicket.get("floor").toString(),
                                         aTicket.get("type").toString(),
                                         (boolean) aTicket.get("activo"),
-                                        tFecha);
+                                        (Timestamp) aTicket.get("time_created"),
+                                        (Timestamp) aTicket.get("time_closed"),
+                                        aTicket.get("createdby").toString(),
+                                        aTicket.get("claimedby").toString());
                                 tickets.add(auxT);
                                 adapter.notifyDataSetChanged();
-                                Log.d("newt", Integer.toString(tickets.size()));
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
@@ -96,7 +108,17 @@ public class ScrollingActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_all) {
+            FILTER_STATE = 0;
+            updateTicketList();
+            return true;
+        }else if(id == R.id.action_pending){
+            FILTER_STATE = 1;
+            updateTicketList();
+            return true;
+        }else if(id == R.id.action_closed){
+            FILTER_STATE = 2;
+            updateTicketList();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -105,12 +127,6 @@ public class ScrollingActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Toast.makeText(context, "CARDS!", Toast.LENGTH_LONG).show();
-        tickets.clear();
-        RecyclerView recycler = findViewById(R.id.my_recycler_view);
-        recycler.setLayoutManager(new LinearLayoutManager(context));
-        adapter = new TicketAdapter(recycler, this, tickets);
-        recycler.setAdapter(adapter);
 
         updateTicketList();
     }

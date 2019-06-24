@@ -4,9 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardElevation="1dp"
-    android:layout_margin="4dp"
-    android:onClick="">
+    app:cardElevation="0dp"
+    app:cardCornerRadius="25dp"
+    app:cardBackgroundColor="@color/colorPrimary"
+    android:layout_marginVertical="7dp"
+    android:layout_marginHorizontal="0dp">
 
     <LinearLayout
         android:orientation="vertical"
@@ -17,17 +19,16 @@
 
         <TextView
             android:id="@+id/txtTicketId"
-            android:text="tk.0000000000000"
             android:textColor="@android:color/darker_gray"
             android:textSize="10sp"
             android:textStyle="normal"
+            android:fontFamily="monospace"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <TextView
             android:id="@+id/txtUsuario"
-            android:text="John Smith"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/white"
             android:textSize="18sp"
             android:textStyle="italic"
             android:layout_width="wrap_content"
@@ -36,25 +37,24 @@
         <LinearLayout
             android:orientation="horizontal"
             android:padding="0dp"
-            android:background="?android:selectableItemBackground"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/txtPiso"
-                android:text="Piso 13"
-                android:textColor="@android:color/black"
+                android:textColor="@android:color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
+                android:fontFamily="monospace"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <TextView
                 android:id="@+id/txtActivo"
-                android:text="activo"
                 android:textColor="@android:color/holo_green_light"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:textStyle="normal"
+                android:fontFamily="monospace"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="right"/>
@@ -64,28 +64,62 @@
         <LinearLayout
             android:orientation="horizontal"
             android:padding="0dp"
-            android:background="?android:selectableItemBackground"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/txtTipo"
-                android:text="Redes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
                 android:textSize="16sp"
                 android:textStyle="normal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:fontFamily="monospace"/>
 
             <TextView
                 android:id="@+id/txtFecha"
-                android:text="1:20 | 13/06"
-                android:textColor="@android:color/black"
+                android:textColor="@android:color/white"
                 android:textSize="16sp"
                 android:textStyle="normal"
+                android:fontFamily="monospace"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="right"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_atendido"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:layout_marginVertical="5dp">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:gravity="center"
+                android:src="@drawable/baseline_info_24"
+                android:tint="#23A6D2"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="3dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@android:color/holo_blue_dark"
+                android:text="Siendo atendido por "
+                android:textSize="16sp"/>
+            <TextView
+                android:id="@+id/txtAtendido"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@android:color/holo_blue_dark"
+                android:textStyle="bold"
+                android:textSize="16sp"/>
 
         </LinearLayout>
     </LinearLayout>

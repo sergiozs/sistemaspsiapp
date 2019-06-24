@@ -3,13 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.ticketapp.ScrollingActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_all"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="@string/action_all"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_about"
+        android:id="@+id/action_pending"
         android:orderInCategory="101"
-        android:title="@string/action_about"
+        android:title="@string/action_pending"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_closed"
+        android:orderInCategory="101"
+        android:title="@string/action_closed"
         app:showAsAction="never" />
 </menu>

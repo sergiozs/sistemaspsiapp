@@ -1,16 +1,14 @@
 package com.example.ticketapp;
 
+import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,13 +17,14 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CreateTicket extends AppCompatActivity {
+public class CreateTicket extends Activity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     Context context;
 
@@ -77,6 +76,7 @@ public class CreateTicket extends AppCompatActivity {
 
                 long datecode = System.currentTimeMillis();
                 Date date = new Date();
+                Timestamp time_closed = null;
                 Map<String, Object> ticket = new HashMap<>();
                 EditText tname = findViewById(R.id.t_user);
                 ticket.put("user", tname.getText().toString().trim());
@@ -84,8 +84,11 @@ public class CreateTicket extends AppCompatActivity {
                 ticket.put("floor", tfloor.getText().toString());
                 Spinner stype = findViewById(R.id.spinTipo);
                 ticket.put("type", stype.getSelectedItem().toString());
-                ticket.put("time", date);
+                ticket.put("time_created", date);
                 ticket.put("activo", true);
+                ticket.put("createdby", "default user");
+                ticket.put("claimedby", "-");
+                ticket.put("time_closed", time_closed);
 
                 if(isEmpty(tname)){
                     Toast.makeText(getApplicationContext(), "Nombre de usuario vacío!", Toast.LENGTH_LONG).show();

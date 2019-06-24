@@ -1,16 +1,16 @@
 package com.example.ticketapp;
 
-import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.ticketapp.Model.Ticket;
 
@@ -21,9 +21,9 @@ import java.util.List;
 class TicketViewHolder extends RecyclerView.ViewHolder {
     Context context;
     public View view;
-    //public Ticket currentTicket;
-    public TextView ticketid, usuario, tipo, piso, fecha, activo;
-    public TicketViewHolder(View ticketView){
+    public TextView ticketid, usuario, tipo, piso, fecha, activo, atendido;
+    public LinearLayout layout_atendido;
+    public TicketViewHolder(View ticketView, final Context context){
         super(ticketView);
         ticketid = ticketView.findViewById(R.id.txtTicketId);
         usuario = ticketView.findViewById(R.id.txtUsuario);
@@ -31,11 +31,17 @@ class TicketViewHolder extends RecyclerView.ViewHolder {
         piso = ticketView.findViewById(R.id.txtPiso);
         fecha = ticketView.findViewById(R.id.txtFecha);
         activo = ticketView.findViewById(R.id.txtActivo);
+        atendido = ticketView.findViewById(R.id.txtAtendido);
+        layout_atendido = ticketView.findViewById(R.id.layout_atendido);
 
+        this.context = context;
         view = ticketView;
         view.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 Log.d("INSIDE CARD", "clicked yo!");
+                Intent i = new Intent(context, OpenTicket.class);
+                i.putExtra("tkid", ticketid.getText());
+                context.startActivity(i);
             }
         });
     }
@@ -43,10 +49,10 @@ class TicketViewHolder extends RecyclerView.ViewHolder {
 
 public class TicketAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<Ticket> tickets;
-    private Activity activity;
+    private Context context;
 
-    public TicketAdapter(RecyclerView recyclerView, Activity activity, List<Ticket> tickets) {
-        this.activity = activity;
+    public TicketAdapter(RecyclerView recyclerView, Context context, List<Ticket> tickets) {
+        this.context = context;
         this.tickets = tickets;
     }
 
@@ -55,10 +61,9 @@ public class TicketAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         View view = (View) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_layout, parent, false);
 
-        return new TicketViewHolder(view);
+        return new TicketViewHolder(view, context);
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Ticket ticket = tickets.get(position);
@@ -68,11 +73,32 @@ public class TicketAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         ticketViewHolder.usuario.setText(ticket.getUsuario());
         ticketViewHolder.piso.setText(ticket.getPiso());
         ticketViewHolder.tipo.setText(ticket.getTipo());
-        //ticketViewHolder.fecha.setText(String.valueOf(ticket.getFecha()));
-        Date date = ticket.getFecha().toDate();
-        SimpleDateFormat myFormat = new SimpleDateFormat("HH:mm  |  dd/MM");
+        ticketViewHolder.tipo.setBackgroundResource(R.drawable.rounded_corner);
+        if(ticket.getTipo().equals("SIAF")){
+            ticketViewHolder.tipo.setBackgroundResource(R.drawable.rc_siaf);
+        }else if(ticket.getTipo().equals("SAPS")){
+            ticketViewHolder.tipo.setBackgroundResource(R.drawable.rc_saps);
+        }else if(ticket.getTipo().equals("SISGED")){
+            ticketViewHolder.tipo.setBackgroundResource(R.drawable.rc_sisged);
+        }
+        Date date = ticket.getTime_created().toDate();
+        SimpleDateFormat myFormat = new SimpleDateFormat("HH:mm - dd/MM");
         ticketViewHolder.fecha.setText(myFormat.format(date));
-        ticketViewHolder.activo.setText("pendiente");
+        String ac_color, ac_text;
+        if(ticket.getActivo()){
+            ac_color = "#30E418";
+            ac_text = "pendiente";
+        }else{
+            ac_color = "#FF0000";
+            ac_text = "cerrado";
+        }
+        ticketViewHolder.activo.setText(ac_text);
+        ticketViewHolder.activo.setTextColor(Color.parseColor(ac_color));
+        if(!ticket.getClaimedby().equals("-") && ticket.getActivo()){
+            ticketViewHolder.layout_atendido.setVisibility(View.VISIBLE);
+            ticketViewHolder.atendido.setText(ticket.getClaimedby());
+        }
+
     }
 
     @Override

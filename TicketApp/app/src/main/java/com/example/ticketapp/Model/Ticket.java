@@ -2,21 +2,41 @@ package com.example.ticketapp.Model;
 
 import com.google.firebase.Timestamp;
 
+import java.util.Map;
+
 public class Ticket {
     private String ticketid;
     private String usuario;
     private String tipo;
     private String piso;
     private boolean activo;
-    private Timestamp fecha;
+    private Timestamp time_created;
+    private Timestamp time_closed;
+    private String createdby;
+    private String claimedby;
 
-    public Ticket(String ticketid, String usuario, String piso, String tipo, boolean activo, Timestamp fecha){
+    public Ticket(String ticketid, String usuario, String piso, String tipo, boolean activo, Timestamp time_created, Timestamp time_closed, String createdby, String claimedby){
         this.ticketid = ticketid;
         this.usuario = usuario;
         this.tipo = tipo;
         this.piso = piso;
         this.activo = activo;
-        this.fecha = fecha;
+        this.time_created = time_created;
+        this.time_closed = time_closed;
+        this.createdby = createdby;
+        this.claimedby = claimedby;
+    }
+
+    public Ticket(String tkid, Map<String, Object> ticketMap){
+        this.ticketid = tkid;
+        this.usuario = ticketMap.get("user").toString();
+        this.tipo = ticketMap.get("type").toString();
+        this.piso = ticketMap.get("floor").toString();
+        this.activo = (boolean)ticketMap.get("activo");
+        this.time_created = (Timestamp)ticketMap.get("time_created");
+        this.time_closed = (Timestamp)ticketMap.get("time_closed");
+        this.createdby = ticketMap.get("createdby").toString();
+        this.claimedby = ticketMap.get("claimedby").toString();
     }
 
     public String getTicketid(){
@@ -59,11 +79,35 @@ public class Ticket {
         this.activo = activo;
     }
 
-    public Timestamp getFecha(){
-        return fecha;
+    public Timestamp getTime_created(){
+        return time_created;
     }
 
-    public void setFecha(Timestamp fecha){
-        this.fecha = fecha;
+    public void setTime_created(Timestamp time_created){
+        this.time_created = time_created;
+    }
+
+    public Timestamp getTime_closed(){
+        return time_closed;
+    }
+
+    public void setTime_closed(Timestamp time_closed){
+        this.time_closed = time_closed;
+    }
+
+    public String getCreatedby(){
+        return createdby;
+    }
+
+    public void setCreatedby(String createdby){
+        this.createdby = createdby;
+    }
+
+    public String getClaimedby(){
+        return claimedby;
+    }
+
+    public void setClaimedby(String claimedby){
+        this.claimedby = claimedby;
     }
 }
