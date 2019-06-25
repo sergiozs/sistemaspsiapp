@@ -13,15 +13,21 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.ticketapp.Model.Ticket;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,15 +35,28 @@ import java.util.Map;
 
 public class ScrollingActivity extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private static final String TAG = "MyActivity";
+    private static final String TAG = "LOGIN ACTIVITY";
     Context context;
     List<Ticket> tickets = new ArrayList<>();
     TicketAdapter adapter;
     int FILTER_STATE = 1;
-
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTitle("UIS PSI");
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            mAuth.signInWithEmailAndPassword("pikachu@psi.gob.pe", "123456")
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) Log.d(TAG, "signInWithEmail:success");
+                            else Log.w(TAG, "signInWithEmail:failure", task.getException());
+                        }
+                    });
+        } else {
+            Toast.makeText(context, "Welcome back ".concat(user.getDisplayName()), Toast.LENGTH_SHORT).show();
+        }
+
 
         context = this;
         super.onCreate(savedInstanceState);
@@ -127,7 +146,7 @@ public class ScrollingActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        Toast.makeText(context, "Welcome back ".concat(mAuth.getCurrentUser().getDisplayName()), Toast.LENGTH_SHORT).show();
         updateTicketList();
     }
 }

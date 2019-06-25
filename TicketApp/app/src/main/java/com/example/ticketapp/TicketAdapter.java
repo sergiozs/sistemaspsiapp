@@ -38,7 +38,6 @@ class TicketViewHolder extends RecyclerView.ViewHolder {
         view = ticketView;
         view.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                Log.d("INSIDE CARD", "clicked yo!");
                 Intent i = new Intent(context, OpenTicket.class);
                 i.putExtra("tkid", ticketid.getText());
                 context.startActivity(i);
