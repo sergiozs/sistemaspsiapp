@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ticketapp.Model.Ticket;
@@ -22,12 +24,10 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,47 +41,67 @@ public class ScrollingActivity extends AppCompatActivity {
     TicketAdapter adapter;
     int FILTER_STATE = 1;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    FirebaseUser user = mAuth.getCurrentUser();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        FirebaseUser user = mAuth.getCurrentUser();
-        if (user != null) {
-            mAuth.signInWithEmailAndPassword("pikachu@psi.gob.pe", "123456")
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) Log.d(TAG, "signInWithEmail:success");
-                            else Log.w(TAG, "signInWithEmail:failure", task.getException());
-                        }
-                    });
-        } else {
-            Toast.makeText(context, "Welcome back ".concat(user.getDisplayName()), Toast.LENGTH_SHORT).show();
-        }
-
-
-        context = this;
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_scrolling);
+        context = this;
+        updateUI(user);
+    }
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+    public void updateUI(FirebaseUser user){
+        if (user == null) {
+            setContentView(R.layout.activity_login);
+            final Button btnLogin = findViewById(R.id.btn_login);
+            final TextView userName = findViewById(R.id.login_user);
+            final TextView password = findViewById(R.id.login_password);
+            btnLogin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(userName.getText() == null || password.getText() == null){
+                        Toast.makeText(context, "Ingresar Datos!", Toast.LENGTH_SHORT).show();
+                    }else{
+                        signIn(userName.getText().toString(), password.getText().toString());
+                    }
+                }
+            });
+        } else {
+            Toast.makeText(context, "Welcome ".concat(user.getDisplayName()), Toast.LENGTH_SHORT).show();
+            setContentView(R.layout.activity_scrolling);
+            Toolbar toolbar = findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+            FloatingActionButton fab = findViewById(R.id.fab);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, CreateTicket.class);
+                    startActivity(intent);
+                }
+            });
+        }
+    }
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Intent intent = new Intent(context, CreateTicket.class);
-                startActivity(intent);
-            }
-        });
-
+    public void signIn(String username, String password){
+        String userEmail = username.concat("@psi.gob.pe");
+        mAuth.signInWithEmailAndPassword(userEmail, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()){
+                            recreate();
+                        }
+                        else{
+                            Toast.makeText(context, "signInWithEmail:failure ".concat(task.getException().toString()), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     public void updateTicketList(){
         tickets.clear();
         RecyclerView recycler = findViewById(R.id.my_recycler_view);
         recycler.setLayoutManager(new LinearLayoutManager(context));
-        adapter = new TicketAdapter(recycler, context, tickets);
+        adapter = new TicketAdapter(context, tickets);
         recycler.setAdapter(adapter);
 
         Query docRef = null;
@@ -139,6 +159,10 @@ public class ScrollingActivity extends AppCompatActivity {
             FILTER_STATE = 2;
             updateTicketList();
             return true;
+        }else if(id == R.id.action_logout){
+            mAuth.signOut();
+            recreate();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -146,7 +170,6 @@ public class ScrollingActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Toast.makeText(context, "Welcome back ".concat(mAuth.getCurrentUser().getDisplayName()), Toast.LENGTH_SHORT).show();
-        updateTicketList();
+        if(user != null) updateTicketList();
     }
 }

@@ -19,6 +19,7 @@
     <string name="action_all">Todos</string>
     <string name="action_pending">Pendiente</string>
     <string name="action_closed">Cerrado</string>
+    <string name="action_logout">LOGOUT</string>
     <string name="short_text">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
         Cras vestibulum porttitor tincidunt. Sed tempor nec ex a ultrices.

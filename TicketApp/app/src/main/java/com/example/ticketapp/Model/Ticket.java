@@ -2,8 +2,6 @@ package com.example.ticketapp.Model;
 
 import com.google.firebase.Timestamp;
 
-import java.util.Map;
-
 public class Ticket {
     private String ticketid;
     private String usuario;
@@ -25,18 +23,6 @@ public class Ticket {
         this.time_closed = time_closed;
         this.createdby = createdby;
         this.claimedby = claimedby;
-    }
-
-    public Ticket(String tkid, Map<String, Object> ticketMap){
-        this.ticketid = tkid;
-        this.usuario = ticketMap.get("user").toString();
-        this.tipo = ticketMap.get("type").toString();
-        this.piso = ticketMap.get("floor").toString();
-        this.activo = (boolean)ticketMap.get("activo");
-        this.time_created = (Timestamp)ticketMap.get("time_created");
-        this.time_closed = (Timestamp)ticketMap.get("time_closed");
-        this.createdby = ticketMap.get("createdby").toString();
-        this.claimedby = ticketMap.get("claimedby").toString();
     }
 
     public String getTicketid(){

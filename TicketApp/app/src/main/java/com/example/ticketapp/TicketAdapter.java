@@ -5,15 +5,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.example.ticketapp.Model.Ticket;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -50,7 +47,7 @@ public class TicketAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private List<Ticket> tickets;
     private Context context;
 
-    public TicketAdapter(RecyclerView recyclerView, Context context, List<Ticket> tickets) {
+    public TicketAdapter(Context context, List<Ticket> tickets) {
         this.context = context;
         this.tickets = tickets;
     }
@@ -59,7 +56,6 @@ public class TicketAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = (View) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_layout, parent, false);
-
         return new TicketViewHolder(view, context);
     }
 
@@ -67,7 +63,6 @@ public class TicketAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Ticket ticket = tickets.get(position);
         TicketViewHolder ticketViewHolder = (TicketViewHolder) holder;
-
         ticketViewHolder.ticketid.setText(ticket.getTicketid());
         ticketViewHolder.usuario.setText(ticket.getUsuario());
         ticketViewHolder.piso.setText(ticket.getPiso());
@@ -97,7 +92,6 @@ public class TicketAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             ticketViewHolder.layout_atendido.setVisibility(View.VISIBLE);
             ticketViewHolder.atendido.setText(ticket.getClaimedby());
         }
-
     }
 
     @Override

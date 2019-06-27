@@ -14,12 +14,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +27,8 @@ import java.util.Map;
 public class CreateTicket extends Activity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     Context context;
-
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    FirebaseUser user = mAuth.getCurrentUser();
     public void hideKeyboard(){
         ((EditText) findViewById(R.id.t_user)).onEditorAction(EditorInfo.IME_ACTION_DONE);
         ((EditText) findViewById(R.id.t_piso)).onEditorAction(EditorInfo.IME_ACTION_DONE);
@@ -86,7 +87,7 @@ public class CreateTicket extends Activity {
                 ticket.put("type", stype.getSelectedItem().toString());
                 ticket.put("time_created", date);
                 ticket.put("activo", true);
-                ticket.put("createdby", "default user");
+                ticket.put("createdby", user.getDisplayName());
                 ticket.put("claimedby", "-");
                 ticket.put("time_closed", time_closed);
 
