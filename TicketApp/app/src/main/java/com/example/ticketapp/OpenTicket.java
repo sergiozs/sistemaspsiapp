@@ -70,7 +70,7 @@ public class OpenTicket extends AppCompatActivity {
                         }
                         if((boolean)ticket.get("activo")) {
                             if(ticket.get("claimedby").toString().equals("-")) btnClaimTicket.setVisibility(View.VISIBLE);
-                            else btnTerminarTicket.setVisibility(View.VISIBLE);
+                            else if(ticket.get("claimedby").toString().equals(user.getDisplayName())) btnTerminarTicket.setVisibility(View.VISIBLE);
                         }
                     } else {
                         Log.d("msg", "No such document");
@@ -147,6 +147,7 @@ public class OpenTicket extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         finish();
+                                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {

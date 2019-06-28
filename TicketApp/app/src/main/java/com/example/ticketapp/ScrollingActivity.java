@@ -67,7 +67,8 @@ public class ScrollingActivity extends AppCompatActivity {
             });
         } else {
             Toast.makeText(context, "Welcome ".concat(user.getDisplayName()), Toast.LENGTH_SHORT).show();
-            setContentView(R.layout.activity_scrolling);
+            //setContentView(R.layout.activity_scrolling);
+            setContentView(R.layout.activity_main);
             Toolbar toolbar = findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
             FloatingActionButton fab = findViewById(R.id.fab);
@@ -76,6 +77,7 @@ public class ScrollingActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     Intent intent = new Intent(context, CreateTicket.class);
                     startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 }
             });
         }

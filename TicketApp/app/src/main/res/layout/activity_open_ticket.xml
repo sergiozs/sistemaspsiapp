@@ -2,9 +2,9 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ot_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/ot_layout">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -13,103 +13,104 @@
         android:layout_margin="20dp"
         android:gravity="center"
         android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="20dp">
 
         <TextView
             android:id="@+id/ot_tkid"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginVertical="20dp"
-            android:gravity="center"
             android:fontFamily="monospace"
+            android:gravity="center"
             android:text="tk.00000000000"
             android:textSize="16sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/ot_usuario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:fontFamily="monospace"/>
+            android:fontFamily="monospace"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/ot_piso"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:fontFamily="monospace"/>
+            android:fontFamily="monospace"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/ot_tipo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:fontFamily="monospace"/>
+            android:fontFamily="monospace"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/ot_activo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:fontFamily="monospace"/>
+            android:fontFamily="monospace"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/ot_created"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:fontFamily="monospace"/>
+            android:fontFamily="monospace"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/ot_time_created"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:fontFamily="monospace"/>
+            android:fontFamily="monospace"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/ot_claimed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
             android:fontFamily="monospace"
-            android:visibility="gone"/>
+            android:textSize="14sp"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/ot_time_closed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
             android:fontFamily="monospace"
-            android:visibility="gone"/>
+            android:textSize="14sp"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/ot_titulo_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:fontFamily="monospace"
             android:text="OBS:"
-            android:textSize="14sp"
-            android:fontFamily="monospace"/>
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/ot_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="monospace"
             android:text="@string/short_text"
-            android:textSize="14sp"
-            android:fontFamily="monospace"/>
+            android:textSize="14sp" />
 
         <Button
             android:id="@+id/btn_terminar_ticket"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="80dp"
+            android:backgroundTint="#D73232"
             android:text="TERMINAR TICKET"
             android:textColor="@color/colorWhite"
-            android:backgroundTint="#D73232"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/btn_claim_ticket"
@@ -117,7 +118,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="80dp"
             android:text="ATENDER TICKET"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
     </LinearLayout>
 
