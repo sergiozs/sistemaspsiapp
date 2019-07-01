@@ -2,6 +2,7 @@ package com.example.ticketapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -42,10 +43,12 @@ public class ScrollingActivity extends AppCompatActivity {
     int FILTER_STATE = 1;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser user = mAuth.getCurrentUser();
+    SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
+        FILTER_STATE = sharedPreferences.getInt("FILTER_STATE", 0);
         updateUI(user);
     }
 
@@ -67,8 +70,7 @@ public class ScrollingActivity extends AppCompatActivity {
             });
         } else {
             Toast.makeText(context, "Welcome ".concat(user.getDisplayName()), Toast.LENGTH_SHORT).show();
-            //setContentView(R.layout.activity_scrolling);
-            setContentView(R.layout.activity_main);
+            setContentView(R.layout.activity_scrolling);
             Toolbar toolbar = findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
             FloatingActionButton fab = findViewById(R.id.fab);
@@ -151,14 +153,18 @@ public class ScrollingActivity extends AppCompatActivity {
 
         if (id == R.id.action_all) {
             FILTER_STATE = 0;
+            sharedPreferences.edit().putInt("FILTER_STATE", FILTER_STATE).apply();
+            sharedPreferences.edit().apply();
             updateTicketList();
             return true;
         }else if(id == R.id.action_pending){
             FILTER_STATE = 1;
+            sharedPreferences.edit().putInt("FILTER_STATE", FILTER_STATE).apply();
             updateTicketList();
             return true;
         }else if(id == R.id.action_closed){
             FILTER_STATE = 2;
+            sharedPreferences.edit().putInt("FILTER_STATE", FILTER_STATE).apply();
             updateTicketList();
             return true;
         }else if(id == R.id.action_logout){

@@ -107,14 +107,14 @@ public class CreateTicket extends Activity {
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    Log.d("SUCCESS", "DocumentSnapshot successfully written!");
+                                    //Log.d("SUCCESS", "DocumentSnapshot successfully written!");
                                     Toast.makeText(getApplicationContext(), "New ticket created!", Toast.LENGTH_LONG).show();
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Log.w("FAILURE", "Error writing document", e);
+                                    //Log.w("FAILURE", "Error writing document", e);
                                 }
                             });
                     tname.setText("");
@@ -123,9 +123,15 @@ public class CreateTicket extends Activity {
                     tname.onEditorAction(EditorInfo.IME_ACTION_DONE);
                     tfloor.onEditorAction(EditorInfo.IME_ACTION_DONE);
                     finish();
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 }
             }
         });
+    }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 }

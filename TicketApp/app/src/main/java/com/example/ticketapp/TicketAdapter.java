@@ -1,5 +1,6 @@
 package com.example.ticketapp;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -38,6 +39,7 @@ class TicketViewHolder extends RecyclerView.ViewHolder {
                 Intent i = new Intent(context, OpenTicket.class);
                 i.putExtra("tkid", ticketid.getText());
                 context.startActivity(i);
+                ((Activity)context).overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
     }

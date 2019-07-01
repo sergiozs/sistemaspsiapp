@@ -91,25 +91,15 @@ public class OpenTicket extends AppCompatActivity {
                         dialog.dismiss();
 
                         db.collection("ticket").document(tkid)
-                                .update("activo", false)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.d("msg", "document updated");
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.w("msg", "Error updating document", e);
-                                    }
-                                });
+                                .update("activo", false);
+
                         db.collection("ticket").document(tkid)
                                 .update("time_closed", new Timestamp(new Date()))
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         finish();
+                                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
@@ -169,5 +159,11 @@ public class OpenTicket extends AppCompatActivity {
                 textView.setTextSize(20);
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 }
