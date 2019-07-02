@@ -1,11 +1,13 @@
 package com.example.ticketapp;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -41,13 +43,14 @@ public class ScrollingActivity extends AppCompatActivity {
     List<Ticket> tickets = new ArrayList<>();
     TicketAdapter adapter;
     int FILTER_STATE = 1;
+    SharedPreferences sharedPreferences;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser user = mAuth.getCurrentUser();
-    SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
+        sharedPreferences = getPreferences(MODE_PRIVATE);
         FILTER_STATE = sharedPreferences.getInt("FILTER_STATE", 0);
         updateUI(user);
     }
@@ -82,6 +85,10 @@ public class ScrollingActivity extends AppCompatActivity {
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 }
             });
+            RecyclerView recycler = findViewById(R.id.my_recycler_view);
+            recycler.setLayoutManager(new LinearLayoutManager(context));
+            adapter = new TicketAdapter(context, tickets);
+            recycler.setAdapter(adapter);
         }
     }
 
@@ -103,10 +110,6 @@ public class ScrollingActivity extends AppCompatActivity {
 
     public void updateTicketList(){
         tickets.clear();
-        RecyclerView recycler = findViewById(R.id.my_recycler_view);
-        recycler.setLayoutManager(new LinearLayoutManager(context));
-        adapter = new TicketAdapter(context, tickets);
-        recycler.setAdapter(adapter);
 
         Query docRef = null;
         switch(FILTER_STATE){
@@ -154,7 +157,6 @@ public class ScrollingActivity extends AppCompatActivity {
         if (id == R.id.action_all) {
             FILTER_STATE = 0;
             sharedPreferences.edit().putInt("FILTER_STATE", FILTER_STATE).apply();
-            sharedPreferences.edit().apply();
             updateTicketList();
             return true;
         }else if(id == R.id.action_pending){
@@ -168,8 +170,24 @@ public class ScrollingActivity extends AppCompatActivity {
             updateTicketList();
             return true;
         }else if(id == R.id.action_logout){
-            mAuth.signOut();
-            recreate();
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setMessage("¿Desea cerrar sesión?");
+            builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                    mAuth.signOut();
+                    recreate();
+                }
+            });
+            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog alert = builder.create();
+            alert.show();
+            TextView textView = alert.findViewById(android.R.id.message);
+            textView.setTextSize(20);
             return true;
         }
         return super.onOptionsItemSelected(item);

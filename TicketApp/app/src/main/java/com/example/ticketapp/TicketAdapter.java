@@ -94,6 +94,9 @@ public class TicketAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             ticketViewHolder.layout_atendido.setVisibility(View.VISIBLE);
             ticketViewHolder.atendido.setText(ticket.getClaimedby());
         }
+        if(ticket.getClaimedby().equals("-") || !ticket.getActivo()){
+            ticketViewHolder.layout_atendido.setVisibility(View.GONE);
+        }
     }
 
     @Override

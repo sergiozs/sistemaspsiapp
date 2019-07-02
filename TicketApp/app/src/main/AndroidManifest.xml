@@ -13,7 +13,6 @@
             android:name=".CreateTicket"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Material.Dialog.Presentation"
             android:windowSoftInputMode="stateVisible">
         </activity>
         <activity
