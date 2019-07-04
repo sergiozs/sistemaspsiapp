@@ -37,8 +37,10 @@ public class OpenTicket extends AppCompatActivity {
         final String tkid = getIntent().getStringExtra("tkid");
         setContentView(R.layout.activity_open_ticket);
         context = this;
-        final Button btnTerminarTicket = findViewById(R.id.btn_terminar_ticket);
-        final Button btnClaimTicket = findViewById(R.id.btn_claim_ticket);
+        final Button btnEnd = findViewById(R.id.btn_terminar_ticket);
+        final Button btnClaim = findViewById(R.id.btn_claim_ticket);
+        final Button btnCancel = findViewById(R.id.btn_cancel);
+        final Button btnFree = findViewById(R.id.btn_free);
 
         DocumentReference docRef = db.collection("ticket").document(tkid);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -69,8 +71,8 @@ public class OpenTicket extends AppCompatActivity {
                             ((TextView)findViewById(R.id.ot_claimed)).setText("ATENDIDO POR: "+ticket.get("claimedby").toString());
                         }
                         if((boolean)ticket.get("activo")) {
-                            if(ticket.get("claimedby").toString().equals("-")) btnClaimTicket.setVisibility(View.VISIBLE);
-                            else if(ticket.get("claimedby").toString().equals(user.getDisplayName())) btnTerminarTicket.setVisibility(View.VISIBLE);
+                            if(ticket.get("claimedby").toString().equals("-")) btnClaim.setVisibility(View.VISIBLE);
+                            else if(ticket.get("claimedby").toString().equals(user.getDisplayName())) btnEnd.setVisibility(View.VISIBLE);
                         }
                     } else {
                         Log.d("msg", "No such document");
@@ -81,7 +83,7 @@ public class OpenTicket extends AppCompatActivity {
             }
         });
 
-        btnTerminarTicket.setOnClickListener(new View.OnClickListener(){
+        btnEnd.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -89,10 +91,8 @@ public class OpenTicket extends AppCompatActivity {
                 builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
-
                         db.collection("ticket").document(tkid)
                                 .update("activo", false);
-
                         db.collection("ticket").document(tkid)
                                 .update("time_closed", new Timestamp(new Date()))
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -100,12 +100,6 @@ public class OpenTicket extends AppCompatActivity {
                                     public void onSuccess(Void aVoid) {
                                         finish();
                                         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.w("msg", "Error updating document", e);
                                     }
                                 });
                     }
@@ -122,7 +116,7 @@ public class OpenTicket extends AppCompatActivity {
             }
         });
 
-        btnClaimTicket.setOnClickListener(new View.OnClickListener(){
+        btnClaim.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -139,11 +133,35 @@ public class OpenTicket extends AppCompatActivity {
                                         finish();
                                         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                                     }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
+                                });
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
+                TextView textView = (TextView) alert.findViewById(android.R.id.message);
+                textView.setTextSize(20);
+            }
+        });
+        btnCancel.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setMessage("¿Desea cancelar este ticket?");
+                builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                        db.collection("ticket").document(tkid)
+                                .update("activo", null)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.w("msg", "Error updating document", e);
+                                    public void onSuccess(Void aVoid) {
+                                        finish();
+                                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                                     }
                                 });
                     }

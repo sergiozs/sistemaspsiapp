@@ -3,19 +3,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:id="@+id/create_ticket_LL">
+    android:id="@+id/create_ticket_LL"
+    android:background="#F3F2EC">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginHorizontal="70dp"
-        android:layout_marginTop="150dp">
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginTop="70dp"
+        android:background="@drawable/border_rounded_corners">
 
         <EditText
             android:id="@+id/t_user"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="25dp"
+            android:layout_marginTop="10dp"
             android:ems="10"
             android:hint="Usuario"
             android:inputType="textPersonName"/>
@@ -25,6 +29,8 @@
             android:id="@+id/t_piso"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="25dp"
+            android:layout_marginTop="10dp"
             android:ems="10"
             android:hint="Piso"
             android:inputType="number"
@@ -33,7 +39,9 @@
         <Spinner
             android:id="@+id/spinTipo"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="25dp"
+            android:layout_marginVertical="10dp"/>
 
     </LinearLayout>
 
@@ -41,12 +49,14 @@
         android:id="@+id/btn_crear_ticket"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_marginTop="70dp"
         android:ems="10"
         android:layout_gravity="center"
         android:text="Crear Ticket"
+        android:textSize="18dp"
+        android:textColor="@color/colorWhite"
         android:hapticFeedbackEnabled="true"
-        android:background="@drawable/green_trading_button_effect"
+        android:background="@drawable/button_effect"
         style="?android:attr/borderlessButtonStyle"/>
 
 </LinearLayout>

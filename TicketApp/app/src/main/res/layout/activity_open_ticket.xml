@@ -84,41 +84,54 @@
             android:textSize="14sp"
             android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/ot_titulo_desc"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:fontFamily="monospace"
-            android:text="OBS:"
-            android:textSize="14sp"
-            android:visibility="gone"/>
-
-        <TextView
-            android:id="@+id/ot_desc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="monospace"
-            android:textSize="14sp"
-            android:visibility="gone"/>
-
-        <Button
-            android:id="@+id/btn_terminar_ticket"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
             android:layout_marginTop="80dp"
-            android:backgroundTint="#D73232"
-            android:text="TERMINAR TICKET"
-            android:textColor="@color/colorWhite"
-            android:visibility="gone" />
+            android:gravity="center"
+            android:orientation="vertical">
 
-        <Button
-            android:id="@+id/btn_claim_ticket"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="80dp"
-            android:text="ATENDER TICKET"
-            android:visibility="gone" />
+            <Button
+                android:id="@+id/btn_terminar_ticket"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="20dp"
+                android:backgroundTint="#D73232"
+                android:text="TERMINAR TICKET"
+                android:textColor="@color/colorWhite"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/btn_claim_ticket"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="20dp"
+                android:backgroundTint="#44BDFF"
+                android:text="ATENDER TICKET"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="20dp"
+                android:backgroundTint="#D73232"
+                android:text="CANCELAR TICKET"
+                android:textColor="@color/colorWhite"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/btn_free"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="20dp"
+                android:text="LIBERAR TICKET"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+
 
     </LinearLayout>
 

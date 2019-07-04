@@ -27,6 +27,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -137,6 +138,7 @@ public class ScrollingActivity extends AppCompatActivity {
                                 tickets.add(auxT);
                                 adapter.notifyDataSetChanged();
                             }
+                            adapter.notifyDataSetChanged();
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
@@ -198,4 +200,31 @@ public class ScrollingActivity extends AppCompatActivity {
         super.onResume();
         if(user != null) updateTicketList();
     }
+
+    /*public void updateUser(String newName) {
+        final String mName = newName;
+        String password = "1234";
+        String email = mName.concat("@psi.gob.pe");
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                            .setDisplayName(mName).build();
+
+                    user.updateProfile(profileUpdates)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Log.d("USER.M", "User profile updated.");
+                                    }
+                                }
+                            });
+                }
+            }
+        });
+    }*/
 }
