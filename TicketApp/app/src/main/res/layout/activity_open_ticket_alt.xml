@@ -24,96 +24,73 @@
             android:layout_marginVertical="20dp"
             android:fontFamily="monospace"
             android:gravity="center"
-            android:text="tk.9876543210"
             android:textSize="16sp"
             android:textStyle="bold" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:visibility="visible">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="monospace"
-                android:textSize="14sp"
-                android:text="derived from: "/>
-
-            <Button
-                android:id="@+id/btn_df"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="0dp"
-                android:ems="7"
-                android:padding="0dp"
-                android:minHeight="0dp"
-                android:text="tk.0123456789"
-                android:textSize="14sp"
-                android:hapticFeedbackEnabled="true"
-                android:background="@drawable/button_effect" />
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/ot_created_by"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="monospace"
-            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/ot_time_begin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="monospace"
-            android:textSize="14sp" />
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/ot_created_by"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/ot_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/ot_floor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="monospace"
-            android:textSize="14sp" />
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/ot_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/ot_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="monospace"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/ot_claimed_by"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="monospace"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/ot_time_claimed"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="monospace"
-            android:textSize="14sp"
-            android:visibility="gone" />
+            android:textSize="15sp"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/ot_state"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="monospace"
-            android:textSize="14sp"
-            android:visibility="gone" />
+            android:textSize="15sp"/>
 
         <TextView
-            android:id="@+id/ot_dt"
+            android:id="@+id/ot_time_claimed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="monospace"
-            android:textSize="14sp"
+            android:textSize="15sp"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/ot_claimed_by"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:textSize="15sp"
             android:visibility="gone"/>
 
         <TextView
@@ -121,41 +98,81 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="monospace"
-            android:textSize="14sp"
+            android:textSize="15sp"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/ot_post_mortem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:textSize="15sp"
+            android:textStyle="italic"
             android:visibility="gone"/>
 
         <Button
-            android:id="@+id/btn_claim"
+            android:id="@+id/btn_post_mortem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="80dp"
-            android:text="ATENDER TICKET"
-            android:visibility="gone" />
-
-        <Button
-            android:id="@+id/btn_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="80dp"
-            android:backgroundTint="#D73232"
-            android:text="TERMINAR TICKET"
+            android:layout_gravity="left"
+            android:layout_margin="10dp"
+            android:ems="7"
+            android:minHeight="25dp"
+            android:textStyle="italic|bold"
+            android:textAllCaps="false"
+            android:text="+ post mortem"
+            android:textSize="15sp"
             android:textColor="@color/colorWhite"
-            android:visibility="gone" />
+            android:hapticFeedbackEnabled="true"
+            android:background="@drawable/button_effect"
+            android:visibility="gone"/>
 
-        <Button
-            android:id="@+id/btn_end"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
             android:layout_marginTop="80dp"
-            android:text="ATENDER TICKET"
-            android:visibility="gone" />
-        <Button
-            android:id="@+id/btn_derive"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="80dp"
-            android:text="ATENDER TICKET"
-            android:visibility="gone" />
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btn_end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="20dp"
+                android:backgroundTint="#D73232"
+                android:text="TERMINAR TICKET"
+                android:textColor="@color/colorWhite"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/btn_claim"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="20dp"
+                android:backgroundTint="#44BDFF"
+                android:text="ATENDER TICKET"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="20dp"
+                android:backgroundTint="#FF9800"
+                android:text="CANCELAR TICKET"
+                android:textColor="@color/colorWhite"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/btn_free"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="20dp"
+                android:text="LIBERAR TICKET"
+                android:visibility="gone" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

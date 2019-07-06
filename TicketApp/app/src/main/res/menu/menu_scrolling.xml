@@ -14,10 +14,16 @@
         android:title=" P "
         app:showAsAction="always" />
     <item
-        android:id="@+id/action_closed"
+        android:id="@+id/action_active"
         android:orderInCategory="102"
-        android:title=" C "
+        android:title=" A "
         app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/action_closed"
+        android:orderInCategory="103"
+        android:title="Cerrado"
+        app:showAsAction="never"/>
 
     <item
         android:id="@+id/action_logout"

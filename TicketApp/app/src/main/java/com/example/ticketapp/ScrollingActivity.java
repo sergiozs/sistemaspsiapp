@@ -20,14 +20,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.ticketapp.Model.Ticket;
+import com.example.ticketapp.Model.TicketAlt;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -41,8 +40,8 @@ public class ScrollingActivity extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "LOGIN ACTIVITY";
     Context context;
-    List<Ticket> tickets = new ArrayList<>();
-    TicketAdapter adapter;
+    List<TicketAlt> tickets = new ArrayList<>();
+    TicketAdapterAlt adapter;
     int FILTER_STATE = 1;
     SharedPreferences sharedPreferences;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -81,14 +80,14 @@ public class ScrollingActivity extends AppCompatActivity {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(context, CreateTicket.class);
+                    Intent intent = new Intent(context, CreateTicketAlt.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 }
             });
             RecyclerView recycler = findViewById(R.id.my_recycler_view);
             recycler.setLayoutManager(new LinearLayoutManager(context));
-            adapter = new TicketAdapter(context, tickets);
+            adapter = new TicketAdapterAlt(context, tickets);
             recycler.setAdapter(adapter);
         }
     }
@@ -113,29 +112,43 @@ public class ScrollingActivity extends AppCompatActivity {
         tickets.clear();
 
         Query docRef = null;
-        switch(FILTER_STATE){
-            case 0: docRef = db.collection("ticket"); break;
-            case 1: docRef = db.collection("ticket").whereEqualTo("activo", true); break;
-            case 2: docRef = db.collection("ticket").whereEqualTo("activo", false); break;
-        }
-                docRef.get()
+        db.collection("ticket").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            Map<String,Object> aTicket;
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                aTicket = document.getData();
-                                Ticket auxT = new Ticket(document.getId(),
-                                        aTicket.get("user").toString(),
-                                        "Piso "+aTicket.get("floor").toString(),
-                                        aTicket.get("type").toString(),
-                                        (boolean) aTicket.get("activo"),
-                                        (Timestamp) aTicket.get("time_created"),
-                                        (Timestamp) aTicket.get("time_closed"),
-                                        aTicket.get("createdby").toString(),
-                                        aTicket.get("claimedby").toString());
-                                tickets.add(auxT);
+                                String validate = document.get("state").toString();
+                                switch(FILTER_STATE){
+                                    case 0: {
+                                        if(validate.equals("pending") || validate.equals("claimed")){
+                                            TicketAlt auxT = getTicketData(document.getId(), document.getData());
+                                            tickets.add(auxT);
+                                        }
+                                        break;
+                                    }
+                                    case 1: {
+                                        if(validate.equals("pending")){
+                                            TicketAlt auxT = getTicketData(document.getId(), document.getData());
+                                            tickets.add(auxT);
+                                        }
+                                        break;
+                                    }
+                                    case 2: {
+                                        if(validate.equals("claimed")){
+                                            TicketAlt auxT = getTicketData(document.getId(), document.getData());
+                                            tickets.add(auxT);
+                                        }
+                                        break;
+                                    }
+                                    case 3: {
+                                        if(validate.equals("closed") || validate.equals("cancelled")){
+                                            TicketAlt auxT = getTicketData(document.getId(), document.getData());
+                                            tickets.add(auxT);
+                                        }
+                                        break;
+                                    }
+                                }
                                 adapter.notifyDataSetChanged();
                             }
                             adapter.notifyDataSetChanged();
@@ -144,6 +157,7 @@ public class ScrollingActivity extends AppCompatActivity {
                         }
                     }
                 });
+
     }
 
     @Override
@@ -166,8 +180,13 @@ public class ScrollingActivity extends AppCompatActivity {
             sharedPreferences.edit().putInt("FILTER_STATE", FILTER_STATE).apply();
             updateTicketList();
             return true;
-        }else if(id == R.id.action_closed){
+        }else if(id == R.id.action_active){
             FILTER_STATE = 2;
+            sharedPreferences.edit().putInt("FILTER_STATE", FILTER_STATE).apply();
+            updateTicketList();
+            return true;
+        }else if(id == R.id.action_closed){
+            FILTER_STATE = 3;
             sharedPreferences.edit().putInt("FILTER_STATE", FILTER_STATE).apply();
             updateTicketList();
             return true;
@@ -199,6 +218,39 @@ public class ScrollingActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if(user != null) updateTicketList();
+    }
+
+    public TicketAlt getTicketData(String tkid, Map<String, Object> aTicket){
+        String ticketid = tkid;
+        Timestamp time_begin = (Timestamp)aTicket.get("time_begin");
+        String created_by = aTicket.get("created_by").toString();
+        String user = aTicket.get("user").toString();
+        String floor = aTicket.get("floor").toString();
+        String type = aTicket.get("type").toString();
+        String state = aTicket.get("state").toString();
+        String description = null;
+        Timestamp time_claimed = null;
+        String claimed_by = null;
+        Timestamp time_end = null;
+        String post_mortem = null;
+        if(aTicket.get("description") != null){
+            description = aTicket.get("description").toString();
+        }
+        if(aTicket.get("time_claimed") != null){
+            time_claimed = (Timestamp)aTicket.get("time_claimed");
+            claimed_by = aTicket.get("claimed_by").toString();
+        }
+        if(aTicket.get("time_end") != null){
+            time_end = (Timestamp) aTicket.get("time_end");
+        }
+        if(aTicket.get("post_mortem") != null){
+            post_mortem = aTicket.get("post_mortem").toString();
+        }
+
+        TicketAlt ticketObj = new TicketAlt(ticketid, time_begin, created_by, user, floor, type,
+                                            description, state, time_claimed, claimed_by, time_end, post_mortem);
+
+        return ticketObj;
     }
 
     /*public void updateUser(String newName) {

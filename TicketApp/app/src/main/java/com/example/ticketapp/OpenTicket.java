@@ -111,7 +111,7 @@ public class OpenTicket extends AppCompatActivity {
                 });
                 AlertDialog alert = builder.create();
                 alert.show();
-                TextView textView = (TextView) alert.findViewById(android.R.id.message);
+                TextView textView = alert.findViewById(android.R.id.message);
                 textView.setTextSize(20);
             }
         });
@@ -143,7 +143,7 @@ public class OpenTicket extends AppCompatActivity {
                 });
                 AlertDialog alert = builder.create();
                 alert.show();
-                TextView textView = (TextView) alert.findViewById(android.R.id.message);
+                TextView textView = alert.findViewById(android.R.id.message);
                 textView.setTextSize(20);
             }
         });
@@ -173,7 +173,7 @@ public class OpenTicket extends AppCompatActivity {
                 });
                 AlertDialog alert = builder.create();
                 alert.show();
-                TextView textView = (TextView) alert.findViewById(android.R.id.message);
+                TextView textView = alert.findViewById(android.R.id.message);
                 textView.setTextSize(20);
             }
         });

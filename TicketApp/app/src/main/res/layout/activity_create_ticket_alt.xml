@@ -3,14 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:id="@+id/layout_create_ticket">
+    android:id="@+id/layout_create_ticket"
+    android:background="#F3F2EC">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginHorizontal="40dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="70dp"
         android:background="@drawable/border_rounded_corners">
 
         <EditText
@@ -48,7 +49,7 @@
         android:id="@+id/btn_create_ticket"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="70dp"
         android:ems="10"
         android:layout_gravity="center"
         android:text="Crear Ticket"
@@ -56,6 +57,20 @@
         android:textColor="@color/colorWhite"
         android:hapticFeedbackEnabled="true"
         android:background="@drawable/button_effect"
+        style="?android:attr/borderlessButtonStyle"/>
+
+    <Button
+        android:id="@+id/btn_create_claim_ticket"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:ems="10"
+        android:layout_gravity="center"
+        android:text="Crear y Atender"
+        android:textSize="18dp"
+        android:textColor="@color/colorWhite"
+        android:hapticFeedbackEnabled="true"
+        android:background="@drawable/button_effect_blue"
         style="?android:attr/borderlessButtonStyle"/>
 
 </LinearLayout>

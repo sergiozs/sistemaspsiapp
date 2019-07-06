@@ -16,6 +16,10 @@ public class TicketAlt {
     private Timestamp time_end;
     private String post_mortem;
 
+    public TicketAlt(){
+
+    }
+
     public TicketAlt(String ticketid, Timestamp time_begin, String created_by, String user, String floor, String type,
                      String description, String state, Timestamp time_claimed, String claimed_by, Timestamp time_end, String post_mortem) {
         this.ticketid = ticketid;
