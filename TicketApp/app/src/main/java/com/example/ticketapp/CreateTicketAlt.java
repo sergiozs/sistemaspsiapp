@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,11 +16,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Date;
@@ -31,6 +35,7 @@ public class CreateTicketAlt extends Activity {
     Context context;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser FBuser = mAuth.getCurrentUser();
+    boolean available;
     public void hideKeyboard(){
         ((EditText) findViewById(R.id.ct_user)).onEditorAction(EditorInfo.IME_ACTION_DONE);
         ((EditText) findViewById(R.id.ct_floor)).onEditorAction(EditorInfo.IME_ACTION_DONE);
@@ -44,6 +49,14 @@ public class CreateTicketAlt extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         context = this;
         super.onCreate(savedInstanceState);
+        db.collection("users").document(FBuser.getDisplayName()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    available = (boolean)task.getResult().get("available");
+                }
+            }
+        });
         setContentView(R.layout.activity_create_ticket_alt);
         final Spinner spinner = findViewById(R.id.ct_type);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context,
@@ -80,7 +93,10 @@ public class CreateTicketAlt extends Activity {
         btn_create_claim_ticket.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ticketCreator(true);
+                if(available){
+                    ticketCreator(true);
+                }
+                else Toast.makeText(context, "Usted ya se encuentra atendiendo un incidente!", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -115,6 +131,7 @@ public class CreateTicketAlt extends Activity {
             Date time_claimed = null;
             String claimed_by = null;
             if(cc){
+                db.collection("users").document(FBuser.getDisplayName()).update("available", false);
                 time_claimed = new Date();
                 claimed_by = FBuser.getDisplayName();
                 state = "claimed";

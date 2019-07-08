@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,10 +32,19 @@ public class OpenTicketAlt extends AppCompatActivity {
     Context context;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser user = mAuth.getCurrentUser();
+    boolean available;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         context = this;
         super.onCreate(savedInstanceState);
+        db.collection("users").document(user.getDisplayName()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    available = (boolean)task.getResult().get("available");
+                }
+            }
+        });
         final String tkid = getIntent().getStringExtra("tkid");
         setContentView(R.layout.activity_open_ticket_alt);
         context = this;
@@ -75,9 +85,11 @@ public class OpenTicketAlt extends AppCompatActivity {
                         }
                         if(state_val.equals("claimed")){
                             ot_state_val = "en curso";
-                            btnEnd.setVisibility(View.VISIBLE);
-                            btnFree.setVisibility(View.VISIBLE);
-                            btnCancel.setVisibility(View.VISIBLE);
+                            if(ticket.get("claimed_by").equals(user.getDisplayName())){
+                                btnEnd.setVisibility(View.VISIBLE);
+                                btnFree.setVisibility(View.VISIBLE);
+                                btnCancel.setVisibility(View.VISIBLE);
+                            }
                         }
                         if(state_val.equals("closed")){
                             ot_state_val = "cerrado";
@@ -116,35 +128,40 @@ public class OpenTicketAlt extends AppCompatActivity {
         btnClaim.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setMessage("¿Desea atender este incidente?");
-                builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                        db.collection("ticket").document(tkid)
-                                .update("state", "claimed");
-                        db.collection("ticket").document(tkid)
-                                .update("time_claimed", new Date());
-                        db.collection("ticket").document(tkid)
-                                .update("claimed_by", user.getDisplayName())
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        finish();
-                                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                                    }
-                                });
-                    }
-                });
-                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                });
-                AlertDialog alert = builder.create();
-                alert.show();
-                TextView textView = alert.findViewById(android.R.id.message);
-                textView.setTextSize(20);
+                if(available){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setMessage("¿Desea atender este incidente?");
+                    builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                            db.collection("users").document(user.getDisplayName())
+                                    .update("available", false);
+                            db.collection("ticket").document(tkid)
+                                    .update("state", "claimed");
+                            db.collection("ticket").document(tkid)
+                                    .update("time_claimed", new Date());
+                            db.collection("ticket").document(tkid)
+                                    .update("claimed_by", user.getDisplayName())
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            finish();
+                                            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                                        }
+                                    });
+                        }
+                    });
+                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                        }
+                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                    TextView textView = alert.findViewById(android.R.id.message);
+                    textView.setTextSize(20);
+                }
+                else Toast.makeText(context, "Usted ya se encuentra atendiendo un incidente!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -156,6 +173,8 @@ public class OpenTicketAlt extends AppCompatActivity {
                 builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
+                        db.collection("users").document(user.getDisplayName())
+                                .update("available", true);
                         db.collection("ticket").document(tkid)
                                 .update("time_end", new Date());
                         db.collection("ticket").document(tkid)
@@ -193,6 +212,8 @@ public class OpenTicketAlt extends AppCompatActivity {
                 builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
+                        db.collection("users").document(user.getDisplayName())
+                                .update("available", true);
                         db.collection("ticket").document(tkid)
                                 .update("state", "closed");
                         db.collection("ticket").document(tkid)
@@ -226,6 +247,8 @@ public class OpenTicketAlt extends AppCompatActivity {
                 builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
+                        db.collection("users").document(user.getDisplayName())
+                                .update("available", true);
                         db.collection("ticket").document(tkid)
                                 .update("state", "pending");
                         db.collection("ticket").document(tkid)

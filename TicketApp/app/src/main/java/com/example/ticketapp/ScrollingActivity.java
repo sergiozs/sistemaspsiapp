@@ -46,13 +46,15 @@ public class ScrollingActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser user = mAuth.getCurrentUser();
+    RecyclerView recycler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
         sharedPreferences = getPreferences(MODE_PRIVATE);
         FILTER_STATE = sharedPreferences.getInt("FILTER_STATE", 0);
-        updateUI(user);
+        setContentView(R.layout.activity_write);
+        //updateUI(user);
     }
 
     public void updateUI(FirebaseUser user){
@@ -85,10 +87,9 @@ public class ScrollingActivity extends AppCompatActivity {
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 }
             });
-            RecyclerView recycler = findViewById(R.id.my_recycler_view);
+            recycler = findViewById(R.id.my_recycler_view);
             recycler.setLayoutManager(new LinearLayoutManager(context));
             adapter = new TicketAdapterAlt(context, tickets);
-            recycler.setAdapter(adapter);
         }
     }
 
@@ -109,9 +110,8 @@ public class ScrollingActivity extends AppCompatActivity {
     }
 
     public void updateTicketList(){
+        recycler.setAdapter(adapter);
         tickets.clear();
-
-        Query docRef = null;
         db.collection("ticket").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -217,7 +217,7 @@ public class ScrollingActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(user != null) updateTicketList();
+        //if(user != null) updateTicketList();
     }
 
     public TicketAlt getTicketData(String tkid, Map<String, Object> aTicket){

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.design.card.MaterialCardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +13,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.ticketapp.Model.Ticket;
 import com.example.ticketapp.Model.TicketAlt;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -51,6 +53,9 @@ class TicketViewHolderAlt extends RecyclerView.ViewHolder {
 public class TicketAdapterAlt extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<TicketAlt> tickets;
     private Context context;
+    private View view;
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    FirebaseUser FBuser = mAuth.getCurrentUser();
 
     public TicketAdapterAlt(Context context, List<TicketAlt> tickets) {
         this.context = context;
@@ -59,7 +64,7 @@ public class TicketAdapterAlt extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
+        view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_layout, parent, false);
         return new TicketViewHolderAlt(view, context);
     }
@@ -103,6 +108,10 @@ public class TicketAdapterAlt extends RecyclerView.Adapter<RecyclerView.ViewHold
         if(ticket.getState().equals("claimed")){
             ticketViewHolder.layout_atendido.setVisibility(View.VISIBLE);
             ticketViewHolder.claimed_by.setText(ticket.getClaimed_by());
+            if(FBuser.getDisplayName().equals(ticket.getClaimed_by())){
+                ((MaterialCardView)view.findViewById(R.id.card_id)).setStrokeColor(Color.parseColor("#0099cc"));
+                ((MaterialCardView)view.findViewById(R.id.card_id)).setStrokeWidth(3);
+            }
         }else{
             ticketViewHolder.layout_atendido.setVisibility(View.GONE);
         }

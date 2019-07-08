@@ -22,7 +22,8 @@
             android:layout_marginTop="10dp"
             android:ems="10"
             android:hint="Usuario"
-            android:inputType="textPersonName"/>
+            android:inputType="textPersonName"
+            android:backgroundTint="#00000000"/>
         <requestFocus />
 
         <EditText
@@ -34,7 +35,8 @@
             android:ems="10"
             android:hint="Piso"
             android:inputType="number"
-            android:maxLength="2"/>
+            android:maxLength="2"
+            android:backgroundTint="#00000000"/>
 
         <Spinner
             android:id="@+id/ct_type"
