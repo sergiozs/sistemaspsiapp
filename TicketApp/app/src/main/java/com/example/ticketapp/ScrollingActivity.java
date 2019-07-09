@@ -28,7 +28,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -53,8 +52,8 @@ public class ScrollingActivity extends AppCompatActivity {
         context = this;
         sharedPreferences = getPreferences(MODE_PRIVATE);
         FILTER_STATE = sharedPreferences.getInt("FILTER_STATE", 0);
-        setContentView(R.layout.activity_write);
-        //updateUI(user);
+        setContentView(R.layout.activity_scrolling);
+        updateUI(user);
     }
 
     public void updateUI(FirebaseUser user){
@@ -217,7 +216,7 @@ public class ScrollingActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //if(user != null) updateTicketList();
+        if(user != null) updateTicketList();
     }
 
     public TicketAlt getTicketData(String tkid, Map<String, Object> aTicket){
