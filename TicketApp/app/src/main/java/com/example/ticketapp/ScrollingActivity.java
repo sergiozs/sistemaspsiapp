@@ -20,16 +20,18 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.ticketapp.Model.TicketAlt;
+import com.example.ticketapp.Model.Ticket;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,9 +41,10 @@ public class ScrollingActivity extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "LOGIN ACTIVITY";
     Context context;
-    List<TicketAlt> tickets = new ArrayList<>();
-    TicketAdapterAlt adapter;
-    int FILTER_STATE = 1;
+    List<Ticket> tickets = new ArrayList<>();
+    TicketAdapter adapter;
+    int FILTER_STATE;
+    String CURRENT_TK;
     SharedPreferences sharedPreferences;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser user = mAuth.getCurrentUser();
@@ -81,14 +84,15 @@ public class ScrollingActivity extends AppCompatActivity {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(context, CreateTicketAlt.class);
+                    Intent intent = new Intent(context, CreateTicket.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 }
             });
             recycler = findViewById(R.id.my_recycler_view);
             recycler.setLayoutManager(new LinearLayoutManager(context));
-            adapter = new TicketAdapterAlt(context, tickets);
+            adapter = new TicketAdapter(context, tickets);
+            updateTicketList();
         }
     }
 
@@ -121,28 +125,28 @@ public class ScrollingActivity extends AppCompatActivity {
                                 switch(FILTER_STATE){
                                     case 0: {
                                         if(validate.equals("pending") || validate.equals("claimed")){
-                                            TicketAlt auxT = getTicketData(document.getId(), document.getData());
+                                            Ticket auxT = getTicketData(document.getId(), document.getData());
                                             tickets.add(auxT);
                                         }
                                         break;
                                     }
                                     case 1: {
                                         if(validate.equals("pending")){
-                                            TicketAlt auxT = getTicketData(document.getId(), document.getData());
+                                            Ticket auxT = getTicketData(document.getId(), document.getData());
                                             tickets.add(auxT);
                                         }
                                         break;
                                     }
                                     case 2: {
                                         if(validate.equals("claimed")){
-                                            TicketAlt auxT = getTicketData(document.getId(), document.getData());
+                                            Ticket auxT = getTicketData(document.getId(), document.getData());
                                             tickets.add(auxT);
                                         }
                                         break;
                                     }
                                     case 3: {
                                         if(validate.equals("closed") || validate.equals("cancelled")){
-                                            TicketAlt auxT = getTicketData(document.getId(), document.getData());
+                                            Ticket auxT = getTicketData(document.getId(), document.getData());
                                             tickets.add(auxT);
                                         }
                                         break;
@@ -216,10 +220,23 @@ public class ScrollingActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(user != null) updateTicketList();
+        CURRENT_TK = sharedPreferences.getString("CURRENT_TK", "");
+        db.collection("root").document("tk.0").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot doc = task.getResult();
+                    String DB_CURRENT_TK = doc.get("last").toString();
+                    if(!CURRENT_TK.equals(DB_CURRENT_TK)){
+                        sharedPreferences.edit().putString("CURRENT_TK", DB_CURRENT_TK).apply();
+                        if(user != null) updateTicketList();
+                    }
+                }
+            }
+        });
     }
 
-    public TicketAlt getTicketData(String tkid, Map<String, Object> aTicket){
+    public Ticket getTicketData(String tkid, Map<String, Object> aTicket){
         String ticketid = tkid;
         Timestamp time_begin = (Timestamp)aTicket.get("time_begin");
         String created_by = aTicket.get("created_by").toString();
@@ -246,7 +263,7 @@ public class ScrollingActivity extends AppCompatActivity {
             post_mortem = aTicket.get("post_mortem").toString();
         }
 
-        TicketAlt ticketObj = new TicketAlt(ticketid, time_begin, created_by, user, floor, type,
+        Ticket ticketObj = new Ticket(ticketid, time_begin, created_by, user, floor, type,
                                             description, state, time_claimed, claimed_by, time_end, post_mortem);
 
         return ticketObj;

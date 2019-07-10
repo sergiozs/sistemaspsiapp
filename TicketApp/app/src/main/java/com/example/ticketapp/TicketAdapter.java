@@ -5,13 +5,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.design.card.MaterialCardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.example.ticketapp.Model.Ticket;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -19,17 +24,17 @@ import java.util.List;
 class TicketViewHolder extends RecyclerView.ViewHolder {
     Context context;
     public View view;
-    public TextView ticketid, usuario, tipo, piso, fecha, activo, atendido;
+    public TextView ticketid, user, type, floor, time_begin, state, claimed_by;
     public LinearLayout layout_atendido;
     public TicketViewHolder(View ticketView, final Context context){
         super(ticketView);
         ticketid = ticketView.findViewById(R.id.txtTicketId);
-        usuario = ticketView.findViewById(R.id.txtUsuario);
-        tipo = ticketView.findViewById(R.id.txtTipo);
-        piso = ticketView.findViewById(R.id.txtPiso);
-        fecha = ticketView.findViewById(R.id.txtFecha);
-        activo = ticketView.findViewById(R.id.txtActivo);
-        atendido = ticketView.findViewById(R.id.txtAtendido);
+        user = ticketView.findViewById(R.id.txtUsuario);
+        type = ticketView.findViewById(R.id.txtTipo);
+        floor = ticketView.findViewById(R.id.txtPiso);
+        time_begin = ticketView.findViewById(R.id.txtFecha);
+        state = ticketView.findViewById(R.id.txtActivo);
+        claimed_by = ticketView.findViewById(R.id.txtAtendido);
         layout_atendido = ticketView.findViewById(R.id.layout_atendido);
 
         this.context = context;
@@ -48,6 +53,9 @@ class TicketViewHolder extends RecyclerView.ViewHolder {
 public class TicketAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<Ticket> tickets;
     private Context context;
+    private View view;
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    FirebaseUser FBuser = mAuth.getCurrentUser();
 
     public TicketAdapter(Context context, List<Ticket> tickets) {
         this.context = context;
@@ -56,7 +64,7 @@ public class TicketAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
+        view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_layout, parent, false);
         return new TicketViewHolder(view, context);
     }
@@ -66,35 +74,45 @@ public class TicketAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         Ticket ticket = tickets.get(position);
         TicketViewHolder ticketViewHolder = (TicketViewHolder) holder;
         ticketViewHolder.ticketid.setText(ticket.getTicketid());
-        ticketViewHolder.usuario.setText(ticket.getUsuario());
-        ticketViewHolder.piso.setText(ticket.getPiso());
-        ticketViewHolder.tipo.setText(ticket.getTipo());
-        ticketViewHolder.tipo.setBackgroundResource(R.drawable.rounded_corner);
-        if(ticket.getTipo().equals("SIAF")){
-            ticketViewHolder.tipo.setBackgroundResource(R.drawable.rc_siaf);
-        }else if(ticket.getTipo().equals("SAPS")){
-            ticketViewHolder.tipo.setBackgroundResource(R.drawable.rc_saps);
-        }else if(ticket.getTipo().equals("SISGED")){
-            ticketViewHolder.tipo.setBackgroundResource(R.drawable.rc_sisged);
+        ticketViewHolder.user.setText(ticket.getUser());
+        ticketViewHolder.floor.setText(ticket.getFloor());
+        ticketViewHolder.type.setText(ticket.getType());
+        ticketViewHolder.type.setBackgroundResource(R.drawable.rounded_corner);
+        if(ticket.getType().equals("SIAF")){
+            ticketViewHolder.type.setBackgroundResource(R.drawable.rc_siaf);
+        }else if(ticket.getType().equals("SAPS")){
+            ticketViewHolder.type.setBackgroundResource(R.drawable.rc_saps);
+        }else if(ticket.getType().equals("SISGED")){
+            ticketViewHolder.type.setBackgroundResource(R.drawable.rc_sisged);
         }
-        Date date = ticket.getTime_created().toDate();
+        Date date = ticket.getTime_begin().toDate();
         SimpleDateFormat myFormat = new SimpleDateFormat("HH:mm - dd/MM");
-        ticketViewHolder.fecha.setText(myFormat.format(date));
-        String ac_color, ac_text;
-        if(ticket.getActivo()){
+        ticketViewHolder.time_begin.setText(myFormat.format(date));
+        String ac_color = "#000000";
+        String ac_state = "pendiente";
+        String state_value = ticket.getState();
+        if(state_value.equals("pending")){
             ac_color = "#30E418";
-            ac_text = "pendiente";
-        }else{
+        }else if(state_value.equals("claimed")){
+            ac_state = "en curso";
+            ac_color = "#30FFF6";
+        }else if(state_value.equals("closed")){
+            ac_state = "cerrado";
             ac_color = "#FF0000";
-            ac_text = "cerrado";
+        }else if(state_value.equals("cancelled")){
+            ac_state = "cancelado";
+            ac_color = "#FEBE30";
         }
-        ticketViewHolder.activo.setText(ac_text);
-        ticketViewHolder.activo.setTextColor(Color.parseColor(ac_color));
-        if(!ticket.getClaimedby().equals("-") && ticket.getActivo()){
+        ticketViewHolder.state.setText(ac_state);
+        ticketViewHolder.state.setTextColor(Color.parseColor(ac_color));
+        if(ticket.getState().equals("claimed")){
             ticketViewHolder.layout_atendido.setVisibility(View.VISIBLE);
-            ticketViewHolder.atendido.setText(ticket.getClaimedby());
-        }
-        if(ticket.getClaimedby().equals("-") || !ticket.getActivo()){
+            ticketViewHolder.claimed_by.setText(ticket.getClaimed_by());
+            if(FBuser.getDisplayName().equals(ticket.getClaimed_by())){
+                ((MaterialCardView)view.findViewById(R.id.card_id)).setStrokeColor(Color.parseColor("#0099cc"));
+                ((MaterialCardView)view.findViewById(R.id.card_id)).setStrokeWidth(3);
+            }
+        }else{
             ticketViewHolder.layout_atendido.setVisibility(View.GONE);
         }
     }

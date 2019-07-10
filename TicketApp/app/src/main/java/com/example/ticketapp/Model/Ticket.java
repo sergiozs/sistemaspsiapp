@@ -4,96 +4,130 @@ import com.google.firebase.Timestamp;
 
 public class Ticket {
     private String ticketid;
-    private String usuario;
-    private String tipo;
-    private String piso;
-    private boolean activo;
-    private Timestamp time_created;
-    private Timestamp time_closed;
-    private String createdby;
-    private String claimedby;
+    private Timestamp time_begin;
+    private String created_by;
+    private String user;
+    private String floor;
+    private String type;
+    private String description;
+    private String state;
+    private Timestamp time_claimed;
+    private String claimed_by;
+    private Timestamp time_end;
+    private String post_mortem;
 
-    public Ticket(String ticketid, String usuario, String piso, String tipo, boolean activo, Timestamp time_created, Timestamp time_closed, String createdby, String claimedby){
-        this.ticketid = ticketid;
-        this.usuario = usuario;
-        this.tipo = tipo;
-        this.piso = piso;
-        this.activo = activo;
-        this.time_created = time_created;
-        this.time_closed = time_closed;
-        this.createdby = createdby;
-        this.claimedby = claimedby;
+    public Ticket(){
+
     }
 
-    public String getTicketid(){
+    public Ticket(String ticketid, Timestamp time_begin, String created_by, String user, String floor, String type,
+                  String description, String state, Timestamp time_claimed, String claimed_by, Timestamp time_end, String post_mortem) {
+        this.ticketid = ticketid;
+        this.time_begin = time_begin;
+        this.created_by = created_by;
+        this.user = user;
+        this.floor = floor;
+        this.type = type;
+        this.description = description;
+        this.state = state;
+        this.claimed_by = claimed_by;
+        this.time_claimed = time_claimed;
+        this.time_end = time_end;
+        this.post_mortem = post_mortem;
+    }
+
+    public String getTicketid() {
         return ticketid;
     }
 
-    public void setTicketid(String ticketid){
+    public void setTicketid(String ticketid) {
         this.ticketid = ticketid;
     }
 
-    public String getUsuario(){
-        return usuario;
+    public Timestamp getTime_begin() {
+        return time_begin;
     }
 
-    public void setUsuario(String usuario){
-        this.usuario = usuario;
+    public void setTime_begin(Timestamp time_begin) {
+        this.time_begin = time_begin;
     }
 
-    public String getTipo(){
-        return tipo;
+    public String getCreated_by() {
+        return created_by;
     }
 
-    public void setTipo(String tipo){
-        this.tipo = tipo;
+    public void setCreated_by(String created_by) {
+        this.created_by = created_by;
     }
 
-    public String getPiso(){
-        return piso;
+    public String getUser() {
+        return user;
     }
 
-    public void setPiso(String piso){
-        this.piso = piso;
+    public void setUser(String user) {
+        this.user = user;
     }
 
-    public boolean getActivo(){
-        return activo;
+    public String getFloor() {
+        return floor;
     }
 
-    public void setActivo(boolean activo){
-        this.activo = activo;
+    public void setFloor(String floor) {
+        this.floor = floor;
     }
 
-    public Timestamp getTime_created(){
-        return time_created;
+    public String getType() {
+        return type;
     }
 
-    public void setTime_created(Timestamp time_created){
-        this.time_created = time_created;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public Timestamp getTime_closed(){
-        return time_closed;
+    public String getDescription() {
+        return description;
     }
 
-    public void setTime_closed(Timestamp time_closed){
-        this.time_closed = time_closed;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public String getCreatedby(){
-        return createdby;
+    public String getState() {
+        return state;
     }
 
-    public void setCreatedby(String createdby){
-        this.createdby = createdby;
+    public void setState(String state) {
+        this.state = state;
     }
 
-    public String getClaimedby(){
-        return claimedby;
+    public Timestamp getTime_claimed() {
+        return time_claimed;
     }
 
-    public void setClaimedby(String claimedby){
-        this.claimedby = claimedby;
+    public void setTime_claimed(Timestamp time_claimed) {
+        this.time_claimed = time_claimed;
+    }
+
+    public String getClaimed_by() {
+        return claimed_by;
+    }
+
+    public void setClaimed_by(String claimed_by) {
+        this.claimed_by = claimed_by;
+    }
+
+    public Timestamp getTime_end() {
+        return time_end;
+    }
+
+    public void setTime_end(Timestamp time_end) {
+        this.time_end = time_end;
+    }
+    public String getPost_mortem() {
+        return post_mortem;
+    }
+
+    public void setPost_mortem(String post_mortem) {
+        this.post_mortem = post_mortem;
     }
 }
